@@ -14,13 +14,13 @@ colnames(df)=c("x","y")
 head(df)
 
 #create an extent
-ext=extent(min(coor$x),min(coor$y),max(coor$x),max(coor$y))
+ext=extent(min(df$x),min(df$y),max(df$x),max(df$y))
 
 #create a new raster
 new_raster=raster(ext,resolution=1)
 
 #assign a coordinate system
-crs(new_raster)=CRS("+proj=utm +zone=30 +datum=WGS84")
+crs(new_raster)=CRS(" +datum=ETRS89 ")
 
 #create an ndvi raster
 ndvi_raster=rasterize(df,new_raster,field=ndvi)
@@ -30,4 +30,5 @@ plot(ndvi_raster,xlim=c(min(df$x),max(df$x)),
      ylim=c(min(df$y),max(df$y)),xlab="X",ylab="Y",main="NDVI",
      )
 
-legend("topright", legend = "NDVI")
+#make an output of NDVI map
+writeRaster(ndvi_raster,overwrite=TRUE,filename = "NDVI_raster.tif",extent=min(df$x),min(df$y),max(df$x),max(df$y))
